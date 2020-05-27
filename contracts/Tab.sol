@@ -359,9 +359,10 @@ contract Tab is ERC20, Ownable, Pausable{
     uint constant private E18 = 1000000000000000000;
     // Total  250,000,000
     uint constant public maxTotalSupply = 250000000 * E18;
+    bool public isInitialized = false;
     event GiveBackTokens(address indexed owner, address indexed _token, uint256 giveBackBalance);
     constructor () public {
-        _mint(msg.sender, maxTotalSupply);
+        mint(msg.sender, maxTotalSupply);
     }
 
     function _transfer(address from, address to, uint256 value) whenNotPaused internal {
@@ -370,6 +371,11 @@ contract Tab is ERC20, Ownable, Pausable{
 
     function burn(uint256 amount) onlyOwner public {
         _burn(msg.sender, amount);
+    }
+    function mint(address account, uint256 amount) onlyOwner public {
+        require(isInitialized == false);
+        _mint(account, amount);
+        isInitialized = true;
     }
 
     function giveBackTokens(address _token, uint256 _giveBackBalance) public onlyOwner {
