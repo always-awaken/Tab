@@ -356,27 +356,21 @@ contract Tab is ERC20, Ownable, Pausable{
     string public constant name = "TAB";
     string public constant symbol = "TAB";
     uint8 public constant decimals = 18;
-
+    uint constant private E18 = 1000000000000000000;
+    // Total  250,000,000
+    uint constant public maxTotalSupply = 250000000 * E18;
     event GiveBackTokens(address indexed owner, address indexed _token, uint256 giveBackBalance);
-
-
-    constructor (uint256 initialBalance) public {
-        uint256 _initialBalance = initialBalance;
-        _mint(msg.sender, _initialBalance);
+    constructor () public {
+        _mint(msg.sender, maxTotalSupply);
     }
 
     function _transfer(address from, address to, uint256 value) whenNotPaused internal {
         return super._transfer(from, to, value);
     }
 
-    function mint(address account, uint256 amount) onlyOwner public {
-        _mint(account, amount);
-    }
-
     function burn(uint256 amount) onlyOwner public {
         _burn(msg.sender, amount);
     }
-
 
     function giveBackTokens(address _token, uint256 _giveBackBalance) public onlyOwner {
         IERC20 token = IERC20(_token);
